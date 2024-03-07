@@ -1,0 +1,10 @@
+Localhost Service Ports -- HTTP
+
+Customer.API => 5000
+Order.API => 
+
+// Gateways
+OrderApp.Gateway => 5010
+
+
+DOCKER Service Ports
