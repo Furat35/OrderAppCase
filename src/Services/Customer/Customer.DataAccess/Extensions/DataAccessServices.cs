@@ -10,12 +10,12 @@ namespace Customer.DataAccess.Extensions
 {
     public static class DataAccessServices
     {
-        public static async Task AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddDataAccessServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Entityframework implementation
-            services.AddDbContext<EfCustomerContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("OrderAppMssql")));
+            services.AddDbContext<EfCustomerContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("CustomersDbMssql")));
 
-            // Scoped servisler
+            // IOC services
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
             services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));

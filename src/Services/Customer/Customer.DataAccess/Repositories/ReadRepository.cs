@@ -27,6 +27,16 @@ namespace Customer.DataAccess.Repositories
             return query;
         }
 
+        public IQueryable<TEntity> GetWhere(Expression<Func<TEntity, bool>> predicate, bool tracking = false, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = SaveTrackingStatus(tracking);
+            if (includeProperties.Any())
+                foreach (var item in includeProperties)
+                    query = query.Include(item);
+
+            return query.Where(predicate);
+        }
+
         public async Task<TEntity> GetByIdAsync(Guid id, bool tracking = true, params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = SaveTrackingStatus(tracking);

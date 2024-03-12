@@ -17,6 +17,7 @@ namespace Customer.DataAccess.Repositories.Context
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entities = ChangeTracker.Entries()

@@ -27,7 +27,6 @@ namespace Customer.DataAccess.Repositories
         {
             Table.Remove(model);
             return await _context.SaveChangesAsync();
-
         }
 
         public async Task<int> UpdateAsync(TEntity model)

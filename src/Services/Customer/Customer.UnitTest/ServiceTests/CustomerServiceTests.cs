@@ -15,17 +15,17 @@ namespace Customer.UnitTest.ServiceTests
 {
     public class CustomerServiceTests
     {
-        private Mock<IUnitOfWork> _unitOfWork = new();
-        private Mock<IMapper> _mapper = new();
-        private Mock<IValidator<CustomerCreateDto>> _customerCreateDtoValidator = new();
-        private Mock<IValidator<CustomerUpdateDto>> _customerUpdateDtoValidator = new();
-        private List<Entities.Customer> _customers = new();
+        private readonly Mock<IUnitOfWork> _unitOfWork = new();
+        private readonly Mock<IMapper> _mapper = new();
+        private readonly Mock<IValidator<CustomerCreateDto>> _customerCreateDtoValidator = new();
+        private readonly Mock<IValidator<CustomerUpdateDto>> _customerUpdateDtoValidator = new();
+        private readonly Mock<IValidator<Entities.Customer>> _customerValidator = new();
+        private readonly List<Entities.Customer> _customers = [];
 
         public CustomerServiceTests()
         {
             var customers = new List<Entities.Customer>{
-                new Entities.Customer
-                {
+                new() {
                     Id = Guid.Parse("BD2C946F-1936-40C6-9C4B-0856DCB526CE"),
                     Email = "ahmet@gmail.com",
                     Name = "ahmet",
@@ -40,8 +40,7 @@ namespace Customer.UnitTest.ServiceTests
                         CreatedAt = DateTime.Now,
                     }
                 },
-                 new Entities.Customer
-                 {
+                 new() {
                      Id = Guid.Parse("1D2C946F-1936-40C6-9C4B-0856DCB526CE"),
                      Email = "firat@gmail.com",
                      Name = "firat",
@@ -79,7 +78,7 @@ namespace Customer.UnitTest.ServiceTests
             };
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().GetByIdAsync(customerDto.Id, It.IsAny<bool>(), _ => _.Address)).ReturnsAsync(_customers[0]);
             _mapper.Setup(_ => _.Map<CustomerListDto>(_customers[0])).Returns(customerDto);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = await customerService.Get(customerDto.Id);
@@ -94,7 +93,7 @@ namespace Customer.UnitTest.ServiceTests
             // Arrange
             var invalidUserId = Guid.NewGuid();
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().GetByIdAsync(invalidUserId, false, _ => _.Address)).ReturnsAsync((Entities.Customer)null);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = async () => await customerService.Get(invalidUserId);
@@ -105,13 +104,13 @@ namespace Customer.UnitTest.ServiceTests
 
 
         [Fact]
-        public void Get_NoneParamter_ReturnsCustomers()
+        public void Get_NoneParameter_ReturnsCustomers()
         {
             // Arrange
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().Get(false, _ => _.Address)).Returns(_customers.AsQueryable());
             var customerDtos = new List<CustomerListDto>
             {
-                 new CustomerListDto
+                 new ()
                 {
                     Id = _customers[0].Id,
                     Email = _customers[0].Email,
@@ -125,7 +124,7 @@ namespace Customer.UnitTest.ServiceTests
                         CityCode = _customers[0].Address.CityCode
                     }
                 },
-                new CustomerListDto
+                new ()
                 {
                     Id = _customers[1].Id,
                     Email = _customers[1].Email,
@@ -141,7 +140,7 @@ namespace Customer.UnitTest.ServiceTests
                 }
             };
             _mapper.Setup(_ => _.Map<List<CustomerListDto>>(_customers)).Returns(customerDtos);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = customerService.Get();
@@ -170,7 +169,7 @@ namespace Customer.UnitTest.ServiceTests
             _customerCreateDtoValidator.Setup(_ => _.ValidateAsync(It.IsAny<CustomerCreateDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(new FluentValidation.Results.ValidationResult());
             _mapper.Setup(_ => _.Map<Entities.Customer>(It.IsAny<CustomerCreateDto>())).Returns(customerToCreate);
             _unitOfWork.Setup(_ => _.GetWriteRepository<Entities.Customer>().CreateAsync(customerToCreate)).ReturnsAsync(1);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = await customerService.Create(customerCreateDto);
@@ -197,8 +196,8 @@ namespace Customer.UnitTest.ServiceTests
             };
             var customerToCreate = _customers[0];
             _customerCreateDtoValidator.Setup(_ => _.ValidateAsync(It.IsAny<CustomerCreateDto>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ValidationResult { Errors = new List<ValidationFailure> { new ValidationFailure { ErrorMessage = "Error occured!" } } });
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+                .ReturnsAsync(new ValidationResult { Errors = new List<ValidationFailure> { new() { ErrorMessage = "Error occured!" } } });
+            var customerService = CreateCustomerService();
 
             // Act
             var result = async () => await customerService.Create(customerCreateDto);
@@ -247,7 +246,7 @@ namespace Customer.UnitTest.ServiceTests
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().GetByIdAsync(customerUpdateDto.Id, It.IsAny<bool>(), _ => _.Address)).ReturnsAsync(_customers[0]);
             _unitOfWork.Setup(_ => _.GetWriteRepository<Entities.Customer>().UpdateAsync(It.IsAny<Entities.Customer>())).ReturnsAsync(1);
             _mapper.Setup(_ => _.Map(It.IsAny<CustomerUpdateDto>(), It.IsAny<Entities.Customer>())).Returns(customerToUpdate);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = await customerService.Update(customerUpdateDto);
@@ -294,7 +293,7 @@ namespace Customer.UnitTest.ServiceTests
             };
             _customerUpdateDtoValidator.Setup(_ => _.ValidateAsync(It.IsAny<CustomerUpdateDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().GetByIdAsync(customerUpdateDto.Id, It.IsAny<bool>(), _ => _.Address)).ReturnsAsync((Entities.Customer)null);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = async () => await customerService.Update(customerUpdateDto);
@@ -339,8 +338,10 @@ namespace Customer.UnitTest.ServiceTests
                     CreatedAt = _customers[0].Address.CreatedAt,
                 }
             };
-            _customerUpdateDtoValidator.Setup(_ => _.ValidateAsync(It.IsAny<CustomerUpdateDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult { Errors = new List<ValidationFailure> { new ValidationFailure { ErrorMessage = "Error occured" } } });
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            _customerUpdateDtoValidator
+                .Setup(_ => _.ValidateAsync(It.IsAny<CustomerUpdateDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult { Errors = new() { new ValidationFailure { ErrorMessage = "Error occured" } } });
+            var customerService = CreateCustomerService();
 
             // Act
             var result = async () => await customerService.Update(customerUpdateDto);
@@ -356,7 +357,7 @@ namespace Customer.UnitTest.ServiceTests
             var customer = _customers[0];
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().GetByIdAsync(customer.Id, It.IsAny<bool>(), It.IsAny<Expression<Func<Entities.Customer, object>>[]>())).ReturnsAsync(customer);
             _unitOfWork.Setup(_ => _.GetWriteRepository<Entities.Customer>().DeleteAsync(customer)).ReturnsAsync(1);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = await customerService.Delete(customer.Id);
@@ -371,7 +372,7 @@ namespace Customer.UnitTest.ServiceTests
             // Arrange
             var customer = _customers[0];
             _unitOfWork.Setup(_ => _.GetReadRepository<Entities.Customer>().GetByIdAsync(customer.Id, It.IsAny<bool>(), It.IsAny<Expression<Func<Entities.Customer, object>>>())).ReturnsAsync((Entities.Customer)null);
-            var customerService = new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object);
+            var customerService = CreateCustomerService();
 
             // Act
             var result = async () => await customerService.Delete(customer.Id);
@@ -379,5 +380,8 @@ namespace Customer.UnitTest.ServiceTests
             // Assert
             await Assert.ThrowsAsync(typeof(NotFoundException), result);
         }
+
+        private CustomerService CreateCustomerService()
+            => new CustomerService(_unitOfWork.Object, _mapper.Object, _customerCreateDtoValidator.Object, _customerUpdateDtoValidator.Object, _customerValidator.Object);
     }
 }

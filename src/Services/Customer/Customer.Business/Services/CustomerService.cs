@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Customer.Business.Models.Dtos.Customer;
-using Customer.Business.Services.Abstract;
+using Customer.Business.Services.Constracts;
 using Customer.DataAccess.UnitOfWorks;
 using FluentValidation;
 using Shared.DataAccess.Abstract;
@@ -14,17 +14,22 @@ namespace Customer.Business.Services
         private readonly IReadRepository<Entities.Customer> _customerReadRepository;
         private readonly IWriteRepository<Entities.Customer> _customerWriteRepository;
         private readonly IMapper _mapper;
+
+        #region Validators
         private readonly IValidator<CustomerCreateDto> _customerCreateDtoValidator;
         private readonly IValidator<CustomerUpdateDto> _customerUpdateDtoValidator;
+        private readonly IValidator<Entities.Customer> _customerValidator;
+        #endregion
 
         public CustomerService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<CustomerCreateDto> customerCreateDtoValidator,
-            IValidator<CustomerUpdateDto> customerUpdateDtoValidator)
+            IValidator<CustomerUpdateDto> customerUpdateDtoValidator, IValidator<Entities.Customer> customerValidator)
         {
             _customerReadRepository = unitOfWork.GetReadRepository<Entities.Customer>();
             _customerWriteRepository = unitOfWork.GetWriteRepository<Entities.Customer>();
             _mapper = mapper;
             _customerCreateDtoValidator = customerCreateDtoValidator;
             _customerUpdateDtoValidator = customerUpdateDtoValidator;
+            _customerValidator = customerValidator;
         }
 
         public async Task<Guid> Create(CustomerCreateDto customerDto)
@@ -72,24 +77,32 @@ namespace Customer.Business.Services
             return _mapper.Map<List<CustomerListDto>>(customers);
         }
 
-        private void ThrowNotFoundIfCustomerNotExist(Entities.Customer customer)
+        public async Task<bool> Validate(Guid customerId)
         {
-            if (customer is null)
-                throw new NotFoundException("Customer not found!");
+            var customer = await _customerReadRepository.GetByIdAsync(customerId);
+            ThrowNotFoundIfCustomerNotExist(customer);
+            var validationResult = _customerValidator.ValidateAsync(customer);
+            return validationResult.IsCompletedSuccessfully;
         }
 
         private async Task Validate(CustomerCreateDto customerDto)
         {
             var validation = await _customerCreateDtoValidator.ValidateAsync(customerDto);
             if (!validation.IsValid)
-                throw new BadRequestException();
+                throw new BadRequestException(validation.Errors.First().ErrorMessage);
         }
 
         private async Task Validate(CustomerUpdateDto customerDto)
         {
             var validation = await _customerUpdateDtoValidator.ValidateAsync(customerDto);
             if (!validation.IsValid)
-                throw new BadRequestException();
+                throw new BadRequestException(validation.Errors.First().ErrorMessage);
+        }
+
+        private void ThrowNotFoundIfCustomerNotExist(Entities.Customer customer)
+        {
+            if (customer is null)
+                throw new NotFoundException("Customer not found!");
         }
     }
 }

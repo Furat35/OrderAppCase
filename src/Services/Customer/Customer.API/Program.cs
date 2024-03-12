@@ -4,13 +4,14 @@ using Customer.DataAccess.Extensions;
 using Customer.DataAccess.Repositories.Context;
 using Microsoft.AspNetCore.Diagnostics;
 using Shared.Exceptions;
+using Shared.Models;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApiServices(builder.Configuration);
-builder.Services.AddBusinessServices(builder.Configuration);
-await builder.Services.AddDataAccessServices(builder.Configuration);
+builder.Services.AddBusinessServices();
+builder.Services.AddDataAccessServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -19,7 +20,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    // Mock data
+    // Mock database
     var seedDatabase = new ContextSeed(builder.Services.BuildServiceProvider());
     await seedDatabase.SeedDatabaseAsync();
 }
@@ -49,10 +50,11 @@ app.UseExceptionHandler(
                     errorMessage = "An unexceptected error occurred! Please try again .";
 
                 await context.Response
-                    .WriteAsync(JsonSerializer.Serialize(new
+                    .WriteAsync(JsonSerializer.Serialize(new ErrorDetail
                     {
-                        context.Response.StatusCode,
+                        StatusCode = context.Response.StatusCode,
                         ErrorMessage = errorMessage
+
                     }))
                     .ConfigureAwait(false);
             }

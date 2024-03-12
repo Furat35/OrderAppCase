@@ -7,11 +7,11 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "10000"
         }
       ],
       "UpstreamPathTemplate": "/Customer",
-      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ],
       "FileCacheOptions": { "TtlSeconds": 30 }
     },
     {
@@ -20,50 +20,89 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "10000"
         }
       ],
       "UpstreamPathTemplate": "/Customer/{id}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ]
     },
+
+    // Order API
     {
-      "DownstreamPathTemplate": "/api/v1/Customers",
+      "DownstreamPathTemplate": "/api/v1/Orders",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "10010"
         }
       ],
-      "UpstreamPathTemplate": "/Customer",
+      "UpstreamPathTemplate": "/Order",
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "FileCacheOptions": { "TtlSeconds": 30 }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Orders/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "10010"
+        }
+      ],
+      "UpstreamPathTemplate": "/Order/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Orders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "10010"
+        }
+      ],
+      "UpstreamPathTemplate": "/Order",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Customers",
+      "DownstreamPathTemplate": "/api/v1/Orders/Update",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "10010"
         }
       ],
-      "UpstreamPathTemplate": "/Customer",
-      "UpstreamHttpMethod": [ "UPDATE" ]
+      "UpstreamPathTemplate": "/Order/Update",
+      "UpstreamHttpMethod": [ "PUT" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/Customers",
+      "DownstreamPathTemplate": "/api/v1/Orders/setToProccessing/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "5000"
+          "Port": "10010"
         }
       ],
-      "UpstreamPathTemplate": "/Customer",
-      "UpstreamHttpMethod": [ "DELETE" ]
+      "UpstreamPathTemplate": "/Order/setToProccessing/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Orders/setToCompleted/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "10010"
+        }
+      ],
+      "UpstreamPathTemplate": "/Order/setToCompleted/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:7000"
+    "BaseUrl": "http://localhost:5050"
   }
 }
