@@ -54,13 +54,11 @@ namespace Ordering.API.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommandRequest order)
+        public async Task<IActionResult> CreateOrder([FromForm] CreateOrderCommandRequest order)
         {
             var response = await _mediator.Send(order);
             return Ok(response);
         }
-
-
 
         /// <summary>
         /// Update customer 

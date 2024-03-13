@@ -14,6 +14,18 @@ namespace Ordering.API.Extensions
 
             // EntityFramework configurations
             services.AddDbContext<EfOrderingContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("OrderingDbMssql")));
+
+            // Cors implementation
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowedOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("*")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Ordering.Application.Validations.UnitOfWorks;
+﻿using Ordering.Application.UnitOfWorks;
 using Ordering.Persistence.Repositories;
 using Ordering.Persistence.Repositories.Context;
 using Shared.DataAccess.Abstract;

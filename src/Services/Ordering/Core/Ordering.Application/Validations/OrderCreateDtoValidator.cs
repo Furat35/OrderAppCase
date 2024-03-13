@@ -9,8 +9,6 @@ namespace Ordering.Application.Validations
         {
             RuleFor(_ => _.CustomerId)
                 .NotEmpty()
-                .WithMessage("Customer id is required!")
-                .NotEmpty()
                 .WithMessage("Customer id is required!");
 
             RuleFor(_ => _.Quantity)
@@ -22,8 +20,6 @@ namespace Ordering.Application.Validations
                 .WithMessage("Price must be greater than 0");
 
             RuleFor(_ => _.Product)
-                .NotEmpty()
-                .WithMessage("Product is required!")
                 .NotEmpty()
                 .WithMessage("Product is required!");
         }

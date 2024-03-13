@@ -8,7 +8,7 @@ using Ordering.Application.Helpers;
 using Ordering.Application.Models.Dtos;
 using Ordering.Application.Models.Dtos.Addresses;
 using Ordering.Application.Models.Dtos.Orders;
-using Ordering.Application.Validations.UnitOfWorks;
+using Ordering.Application.UnitOfWorks;
 using Ordering.Domain.Entities;
 using Ordering.Domain.Enums;
 using Ordering.Persistence.ExternalApiServices.Contracts;

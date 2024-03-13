@@ -12,7 +12,7 @@ using Ordering.Persistence.Repositories.Context;
 namespace Ordering.Persistence.Migrations
 {
     [DbContext(typeof(EfOrderingContext))]
-    [Migration("20240312135910_init")]
+    [Migration("20240313134625_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -111,7 +111,6 @@ namespace Ordering.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

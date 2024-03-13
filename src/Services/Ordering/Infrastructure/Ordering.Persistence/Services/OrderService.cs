@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Ordering.Application.Helpers;
 using Ordering.Application.Models.Dtos.Orders;
 using Ordering.Application.Services;
-using Ordering.Application.Validations.UnitOfWorks;
+using Ordering.Application.UnitOfWorks;
 using Ordering.Domain.Entities;
 using Ordering.Domain.Enums;
 using Ordering.Persistence.ExternalApiServices.Contracts;
@@ -139,7 +139,7 @@ namespace Ordering.Persistence.Services
 
         private async Task<string> UploadProductImage()
         {
-            var containsImg = _httpContextAccessor.HttpContext.Request.Form.Files.FirstOrDefault();
+            var containsImg = _httpContextAccessor.HttpContext.Request.Form?.Files.FirstOrDefault();
             return containsImg != null ? await _fileService.UploadFile("orders", containsImg) : null;
         }
     }

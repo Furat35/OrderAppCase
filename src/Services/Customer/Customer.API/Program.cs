@@ -15,6 +15,8 @@ builder.Services.AddDataAccessServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors("AllowedOrigins");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

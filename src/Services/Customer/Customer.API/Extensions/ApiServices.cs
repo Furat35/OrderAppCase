@@ -7,6 +7,18 @@
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            // Cors implementation
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowedOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("*")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
         }
     }
 }

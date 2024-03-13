@@ -12,9 +12,6 @@ namespace Ordering.Persistence.EntityTypeConfigurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(_ => _.ImageUrl)
-                .IsRequired();
-
             builder.Property(_ => _.Name)
                 .HasMaxLength(100)
                 .IsRequired();

@@ -1,7 +1,7 @@
 ﻿using Shared.DataAccess.Abstract;
 using Shared.Entities.Common;
 
-namespace Ordering.Application.Validations.UnitOfWorks
+namespace Ordering.Application.UnitOfWorks
 {
     public interface IUnitOfWork : IAsyncDisposable, IDisposable
     {

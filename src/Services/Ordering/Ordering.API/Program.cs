@@ -17,6 +17,8 @@ builder.Services.AddInfrastructureServices();
 
 var app = builder.Build();
 
+app.UseCors("AllowedOrigins");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

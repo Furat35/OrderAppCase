@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Ordering.Application.Models.Dtos.Audit;
 using Ordering.Application.Services;
-using Ordering.Application.Validations.UnitOfWorks;
+using Ordering.Application.UnitOfWorks;
 using Ordering.Domain.Entities;
 using Shared.DataAccess.Abstract;
 

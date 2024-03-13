@@ -8,14 +8,10 @@ namespace Ordering.Application.Validations
         public OrderUpdateDtoValidator()
         {
             RuleFor(_ => _.Id)
-             .NotEmpty()
-             .WithMessage("Id is required!")
-             .NotEmpty()
-             .WithMessage("Id is required!");
+                .NotEmpty()
+                .WithMessage("Id is required!");
 
             RuleFor(_ => _.Address)
-                .NotEmpty()
-                .WithMessage("Address is required!")
                 .NotEmpty()
                 .WithMessage("Address is required!");
         }

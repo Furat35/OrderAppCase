@@ -2,7 +2,7 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Services;
-using Ordering.Application.Validations.UnitOfWorks;
+using Ordering.Application.UnitOfWorks;
 using Ordering.Logger.Consumers;
 using Ordering.Persistence.ExternalApiServices;
 using Ordering.Persistence.ExternalApiServices.Contracts;

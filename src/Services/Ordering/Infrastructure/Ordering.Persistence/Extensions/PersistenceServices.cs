@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ordering.Application.Helpers;
 using Ordering.Application.Services;
-using Ordering.Application.Validations.UnitOfWorks;
+using Ordering.Application.UnitOfWorks;
 using Ordering.Persistence.ExternalApiServices;
 using Ordering.Persistence.ExternalApiServices.Contracts;
 using Ordering.Persistence.Helpers;
