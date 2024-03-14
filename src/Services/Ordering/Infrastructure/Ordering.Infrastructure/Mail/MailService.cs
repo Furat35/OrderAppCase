@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Ordering.Application.Mail;
-using System.Net;
-using System.Net.Mail;
 
 namespace Ordering.Infrastructure.Mail
 {
@@ -20,32 +18,33 @@ namespace Ordering.Infrastructure.Mail
             _smtpPassword = configuration["MailConfigurations:SmtpPassword"];
         }
 
+        // It will throw an error because of the invalid email configurations, so it is commented, comment can be removed if there are valid configurations
         public async Task SendEmailAsync(string toAddress, string subject, string body, bool isHtml = false)
         {
-            try
-            {
-                using (var client = new SmtpClient(_smtpServer))
-                {
-                    client.Port = _smtpPort;
-                    client.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
+            //try
+            //{
+            //    using (var client = new SmtpClient(_smtpServer))
+            //    {
+            //        client.Port = _smtpPort;
+            //        client.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
 
-                    var message = new MailMessage
-                    {
-                        From = new MailAddress(_smtpUsername),
-                        Subject = subject,
-                        Body = body,
-                        IsBodyHtml = isHtml
-                    };
+            //        var message = new MailMessage
+            //        {
+            //            From = new MailAddress(_smtpUsername),
+            //            Subject = subject,
+            //            Body = body,
+            //            IsBodyHtml = isHtml
+            //        };
 
-                    message.To.Add(toAddress);
+            //        message.To.Add(toAddress);
 
-                    await client.SendMailAsync(message);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error sending email: {ex.Message}");
-            }
+            //        await client.SendMailAsync(message);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Error sending email: {ex.Message}");
+            //}
         }
     }
 }

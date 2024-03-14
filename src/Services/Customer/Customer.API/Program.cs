@@ -27,8 +27,6 @@ if (app.Environment.IsDevelopment())
     await seedDatabase.SeedDatabaseAsync();
 }
 
-app.UseHttpsRedirection();
-
 #region Exception Handling
 app.UseExceptionHandler(
     options =>
@@ -64,8 +62,6 @@ app.UseExceptionHandler(
     }
 );
 #endregion
-
-app.UseAuthorization();
 
 app.MapControllers();
 

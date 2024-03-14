@@ -6,8 +6,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10000"
+          "Host": "customer.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Customer",
@@ -19,8 +19,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10000"
+          "Host": "customer.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Customer/{id}",
@@ -33,8 +33,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10010"
+          "Host": "ordering.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Order",
@@ -46,8 +46,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10010"
+          "Host": "ordering.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Order/{id}",
@@ -58,8 +58,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10010"
+          "Host": "ordering.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Order",
@@ -70,8 +70,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10010"
+          "Host": "ordering.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Order/Update",
@@ -82,8 +82,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10010"
+          "Host": "ordering.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Order/setToProccessing/{id}",
@@ -94,8 +94,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": "10010"
+          "Host": "ordering.api",
+          "Port": "8080"
         }
       ],
       "UpstreamPathTemplate": "/Order/setToCompleted/{id}",

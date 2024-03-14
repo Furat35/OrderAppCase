@@ -43,7 +43,7 @@ namespace Ordering.Persistence.Helpers
                 throw new ArgumentException("Invalid folder name!");
 
             var currentDirectory = Directory.GetCurrentDirectory();
-            var filePath = Path.Combine(currentDirectory, "wwwroot", "uploads", folderName);
+            var filePath = Path.Combine(currentDirectory, "wwwroot", "uploads", folderName, fileName);
 
             if (File.Exists(filePath))
                 File.Delete(filePath);

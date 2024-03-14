@@ -44,7 +44,7 @@ namespace Customer.DataAccess.Repositories
                 foreach (var item in includeProperties)
                     query = query.Include(item);
 
-            return await query.FirstOrDefaultAsync(_ => _.Id == id);
+            return await query.FirstOrDefaultAsync(_ => _.Id.ToString().ToUpper() == id.ToString().ToUpper());
         }
 
         private IQueryable<TEntity> SaveTrackingStatus(bool tracking)

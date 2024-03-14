@@ -36,6 +36,7 @@ app.UseExceptionHandler(
             var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
             if (exceptionObject != null)
             {
+                Console.WriteLine(exceptionObject.Error);
                 context.Response.StatusCode = exceptionObject.Error switch
                 {
                     BadRequestException ex => StatusCodes.Status400BadRequest,
@@ -61,9 +62,6 @@ app.UseExceptionHandler(
 );
 #endregion
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

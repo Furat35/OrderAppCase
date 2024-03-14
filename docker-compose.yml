@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  # Databases
+  customersdb:
+    image: mcr.microsoft.com/mssql/server
+
+  orderingdb:
+    image: mcr.microsoft.com/mssql/server
+
+  # Message Brokers
+  orderingrabbitmq:
+    image: rabbitmq:3.12.12-management-alpine
+
+  loggerrabbitmq:
+    image: rabbitmq:3.12.12-management-alpine
+
+  # Services
+  customer.api:
+    image: ${DOCKER_REGISTRY-}customerapi
+    build:
+      context: .
+      dockerfile: src/Services/Customer/Customer.API/Dockerfile
+
+  orderapp.gateway:
+    image: ${DOCKER_REGISTRY-}orderappgateway
+    build:
+      context: .
+      dockerfile: ApiGateways/OrderApp.Gateway/Dockerfile
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
+
+
+  ordering.logger:
+    image: ${DOCKER_REGISTRY-}orderinglogger
+    build:
+      context: .
+      dockerfile: src/Services/Ordering/Ordering.Logger/Dockerfile
+

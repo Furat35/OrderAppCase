@@ -1,11 +1,13 @@
 ﻿using EventBus.Message.Common;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Ordering.Application.Helpers;
 using Ordering.Application.Services;
 using Ordering.Application.UnitOfWorks;
 using Ordering.Logger.Consumers;
 using Ordering.Persistence.ExternalApiServices;
 using Ordering.Persistence.ExternalApiServices.Contracts;
+using Ordering.Persistence.Helpers;
 using Ordering.Persistence.Repositories;
 using Ordering.Persistence.Repositories.Context;
 using Ordering.Persistence.Services;
@@ -24,7 +26,9 @@ namespace Ordering.Logger.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddTransient<IOrderLoggerService, OrderLoggerService>();
+            services.AddTransient<IFileService, FileService>();
             services.AddDbContext<EfOrderingContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("OrderingDbMssql")));
+            builder.Services.AddHttpContextAccessor();
             services.AddHttpClient<ICustomerService, CustomerService>(c =>
               c.BaseAddress = new Uri(builder.Configuration["OrderAppGatewayUrl"]));
 

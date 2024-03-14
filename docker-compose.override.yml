@@ -1,0 +1,103 @@
+version: '3.4'
+
+services:
+    # Datababases
+  customersdb:
+     container_name: customersdb
+     environment:
+        SA_PASSWORD: "Firat3521"
+        ACCEPT_EULA: "Y"
+     restart: always
+     ports:
+        - "10433:1433" 
+
+  orderingdb:
+     container_name: orderingdb
+     environment:
+        SA_PASSWORD: "Firat3521"
+        ACCEPT_EULA: "Y"
+     restart: always
+     ports:
+        - "10434:1433" 
+
+    # Message Broker
+  orderingrabbitmq:
+    container_name: orderingrabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672" 
+  
+  loggerrabbitmq:
+    container_name: loggerrabbitmq
+    restart: always
+    ports:
+        - "5673:5672"
+        - "15674:15672" 
+
+    # Services
+  customer.api:
+    container_name: customer.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - "ConnectionStrings:CustomersDbMssql=Server=customersdb,1433;Database=CustomersDb;User Id=sa;Password=Firat3521;TrustServerCertificate=True;"
+    depends_on:
+      - "customersdb"
+    ports:
+      - "10000:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - "OrderAppGatewayUrl=http://orderapp.gateway:8080"
+      - "ConnectionStrings:OrderingDbMssql=Server=orderingdb,1433;Database=OrderingDb;User Id=sa;Password=Firat3521;TrustServerCertificate=True;"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@orderingrabbitmq:5672" 
+    ports:
+      - "10010:8080"
+    depends_on:
+      - "orderingdb"
+      - "orderingrabbitmq" 
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  ordering.logger:
+    container_name: ordering.logger
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - "ConnectionStrings:OrderingDbMssql=Server=orderingdb,1433;Database=OrderingDb;User Id=sa;Password=Firat3521;TrustServerCertificate=True;"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@orderingrabbitmq:5672" 
+    ports:
+      - "10020:8080"
+    depends_on:
+      - orderingdb
+      - loggerrabbitmq 
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+    # Gateway
+  orderapp.gateway:
+    container_name: orderapp.gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "10050:8080"
+    depends_on:
+      - customer.api 
+      - ordering.api 
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+
+
+

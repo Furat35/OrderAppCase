@@ -47,6 +47,4 @@ app.UseExceptionHandler(
 );
 #endregion
 
-app.UseHttpsRedirection();
-
 app.Run();
